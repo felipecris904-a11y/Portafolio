@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cristian Felipe Rojas Sierra — Portafolio</title>
+<style>
+  :root{
+    --bg:#0d1117;
+    --bg-soft:#11161d;
+    --panel:#161b22;
+    --line:#23303f;
+    --text:#cdd9e5;
+    --text-dim:#7d8b9c;
+    --accent:#39d98a;
+    --accent-2:#5dade2;
+    --warn:#e8a33d;
+    --mono:'JetBrains Mono','Fira Code',monospace;
+    --sans:'Inter',system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--accent);color:#04150d;}
+
+  /* scanline / grid backdrop */
+  .grid-bg{
+    position:fixed;inset:0;z-index:-2;
+    background-image:
+      linear-gradient(rgba(57,217,138,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(57,217,138,0.04) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 20%, rgba(0,0,0,0.9), transparent 75%);
+  }
+  .glow{
+    position:fixed;top:-200px;left:50%;transform:translateX(-50%);
+    width:900px;height:600px;z-index:-1;
+    background:radial-gradient(circle, rgba(57,217,138,0.13), transparent 65%);
+    pointer-events:none;
+  }
+
+  header{
+    min-height:100vh;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:6vh 8vw;
+    position:relative;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    color:var(--accent);
+    font-size:0.85rem;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    display:flex;align-items:center;gap:10px;
+    opacity:0;animation:fadeUp .7s ease forwards;
+    animation-delay:.1s;
+  }
+  .eyebrow::before{
+    content:'';width:8px;height:8px;border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 0 0 rgba(57,217,138,.6);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(57,217,138,.6);}
+    70%{box-shadow:0 0 0 8px rgba(57,217,138,0);}
+    100%{box-shadow:0 0 0 0 rgba(57,217,138,0);}
+  }
+  h1{
+    font-size:clamp(2.6rem,7vw,5.2rem);
+    font-weight:800;
+    line-height:1.02;
+    margin:0.5rem 0 0.8rem;
+    letter-spacing:-0.02em;
+    opacity:0;animation:fadeUp .7s ease forwards;animation-delay:.25s;
+  }
+  h1 span{
+    background:linear-gradient(100deg,var(--accent),var(--accent-2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .terminal-line{
+    font-family:var(--mono);
+    color:var(--text-dim);
+    font-size:1.05rem;
+    max-width:640px;
+    opacity:0;animation:fadeUp .7s ease forwards;animation-delay:.4s;
+  }
+  .terminal-line .typed{
+    border-right:2px solid var(--accent);
+    animation:blink 1s step-end infinite;
+    padding-right:2px;
+  }
+  @keyframes blink{50%{border-color:transparent;}}
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(18px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+
+  .scroll-hint{
+    position:absolute;bottom:6vh;left:8vw;
+    font-family:var(--mono);font-size:0.75rem;color:var(--text-dim);
+    display:flex;align-items:center;gap:8px;
+    opacity:0;animation:fadeUp .7s ease forwards;animation-delay:1s;
+  }
+  .scroll-hint .arrow{
+    display:inline-block;animation:bob 1.6s ease-in-out infinite;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(5px);}}
+
+  section{
+    padding:9vh 8vw;
+    max-width:1100px;
+    margin:0 auto;
+  }
+  .section-tag{
+    font-family:var(--mono);
+    color:var(--accent-2);
+    font-size:0.8rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    margin-bottom:0.6rem;
+  }
+  h2{
+    font-size:clamp(1.8rem,3.4vw,2.6rem);
+    font-weight:700;
+    margin-bottom:2.2rem;
+    letter-spacing:-0.01em;
+  }
+  .reveal{
+    opacity:0;transform:translateY(24px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* SKILLS */
+  .skills-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:14px;
+  }
+  .skill-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:1.3rem 1rem;
+    text-align:center;
+    transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+  .skill-card:hover{
+    transform:translateY(-6px);
+    border-color:var(--accent);
+    box-shadow:0 10px 24px rgba(57,217,138,0.12);
+  }
+  .skill-card .ico{font-size:1.8rem;display:block;margin-bottom:.5rem;}
+  .skill-card .name{font-family:var(--mono);font-size:0.85rem;color:var(--text);}
+
+  /* ABOUT / TRAITS */
+  .about-wrap{
+    display:grid;grid-template-columns:1.1fr 1fr;gap:3rem;align-items:start;
+  }
+  @media (max-width:760px){.about-wrap{grid-template-columns:1fr;}}
+  .traits{list-style:none;display:flex;flex-wrap:wrap;gap:10px;margin-top:1rem;}
+  .traits li{
+    font-family:var(--mono);font-size:0.85rem;
+    background:rgba(57,217,138,0.08);
+    border:1px solid rgba(57,217,138,0.25);
+    color:var(--accent);
+    padding:6px 12px;border-radius:20px;
+  }
+  .grow-box{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:1.4rem 1.5rem;
+  }
+  .grow-box h3{
+    font-size:1rem;color:var(--warn);font-family:var(--mono);
+    margin-bottom:1rem;display:flex;align-items:center;gap:8px;
+  }
+  .grow-item{margin-bottom:1.1rem;}
+  .grow-item:last-child{margin-bottom:0;}
+  .grow-item .label{display:flex;justify-content:space-between;font-size:0.85rem;color:var(--text-dim);margin-bottom:5px;}
+  .bar{height:7px;border-radius:5px;background:#1f2730;overflow:hidden;}
+  .bar-fill{
+    height:100%;border-radius:5px;
+    background:linear-gradient(90deg,var(--warn),var(--accent));
+    width:0%;
+    transition:width 1.4s ease;
+  }
+  .grow-item small{display:block;margin-top:6px;color:var(--text-dim);font-size:0.8rem;}
+
+  /* HOBBIES */
+  .hobby-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;
+  }
+  .hobby-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:1.6rem 1.2rem;text-align:center;
+    position:relative;overflow:hidden;
+  }
+  .hobby-card::after{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 0%, rgba(93,173,226,0.12), transparent 60%);
+    opacity:0;transition:opacity .3s ease;
+  }
+  .hobby-card:hover::after{opacity:1;}
+  .hobby-card .emoji{font-size:2.1rem;display:block;margin-bottom:.6rem;transition:transform .3s ease;}
+  .hobby-card:hover .emoji{transform:scale(1.18) rotate(-6deg);}
+  .hobby-card .label{font-family:var(--mono);font-size:0.85rem;color:var(--text-dim);}
+
+  footer{
+    text-align:center;padding:6vh 8vw;
+    font-family:var(--mono);color:var(--text-dim);font-size:0.85rem;
+    border-top:1px solid var(--line);
+  }
+  footer .name-foot{color:var(--accent);}
+
+  .nav-dot{
+    position:fixed;right:24px;top:50%;transform:translateY(-50%);
+    display:flex;flex-direction:column;gap:14px;z-index:10;
+  }
+  .nav-dot a{
+    width:8px;height:8px;border-radius:50%;background:#2b3742;
+    display:block;transition:background .25s ease, transform .25s ease;
+  }
+  .nav-dot a.active{background:var(--accent);transform:scale(1.3);}
+  @media (max-width:760px){.nav-dot{display:none;}}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="glow"></div>
+
+<nav class="nav-dot">
+  <a href="#inicio" data-target="inicio"></a>
+  <a href="#sobre-mi" data-target="sobre-mi"></a>
+  <a href="#skills" data-target="skills"></a>
+  <a href="#hobbies" data-target="hobbies"></a>
+</nav>
+
+<header id="inicio">
+  <div class="eyebrow">disponible para nuevos proyectos</div>
+  <h1>Cristian Felipe<br><span>Rojas Sierra</span></h1>
+  <p class="terminal-line">$ whoami<br>&gt; <span class="typed" id="typedText"></span></p>
+  <div class="scroll-hint"><span class="arrow">↓</span> desplázate para conocerme</div>
+</header>
+
+<section id="sobre-mi">
+  <div class="section-tag">// 01 sobre mí</div>
+  <h2 class="reveal">Cómo trabajo y quién soy</h2>
+  <div class="about-wrap">
+    <div class="reveal">
+      <p>Soy una persona creativa y productiva, con muchas ganas de aportar valor en cada proyecto en el que participo. Disfruto trabajar en equipo y creo firmemente que la colaboración y el respeto sacan lo mejor de cualquier proyecto.</p>
+      <ul class="traits">
+        <li>Amable</li>
+        <li>Respetuoso</li>
+        <li>Solidario</li>
+        <li>Trabajo en equipo</li>
+        <li>Creativo</li>
+        <li>Productivo</li>
+      </ul>
+    </div>
+    <div class="grow-box reveal">
+      <h3>⚙ áreas en crecimiento</h3>
+      <div class="grow-item">
+        <div class="label"><span>Puntualidad</span><span>mejorando</span></div>
+        <div class="bar"><div class="bar-fill" data-width="65"></div></div>
+        <small>Antes solía llegar tarde, ahora estoy trabajando activamente para cambiarlo.</small>
+      </div>
+      <div class="grow-item">
+        <div class="label"><span>Procrastinación</span><span>en progreso</span></div>
+        <div class="bar"><div class="bar-fill" data-width="70"></div></div>
+        <small>Estoy adelantando mis tareas antes de la fecha límite, convirtiendo esta debilidad en una fortaleza.</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="section-tag">// 02 stack técnico</div>
+  <h2 class="reveal">Conocimientos y herramientas</h2>
+  <div class="skills-grid reveal">
+    <div class="skill-card"><span class="ico">🟨</span><span class="name">JavaScript</span></div>
+    <div class="skill-card"><span class="ico">🐍</span><span class="name">Python</span></div>
+    <div class="skill-card"><span class="ico">🗄️</span><span class="name">SQL</span></div>
+    <div class="skill-card"><span class="ico">🦫</span><span class="name">The Beaver</span></div>
+    <div class="skill-card"><span class="ico">🐧</span><span class="name">Linux</span></div>
+    <div class="skill-card"><span class="ico">🔗</span><span class="name">n8n</span></div>
+    <div class="skill-card"><span class="ico">💾</span><span class="name">Bases de datos</span></div>
+  </div>
+</section>
+
+<section id="hobbies">
+  <div class="section-tag">// 03 fuera del código</div>
+  <h2 class="reveal">Lo que me mantiene equilibrado</h2>
+  <div class="hobby-grid reveal">
+    <div class="hobby-card"><span class="emoji">🏐</span><span class="label">Voleibol</span></div>
+    <div class="hobby-card"><span class="emoji">🎨</span><span class="label">Dibujar</span></div>
+    <div class="hobby-card"><span class="emoji">💪</span><span class="label">Ejercicio</span></div>
+    <div class="hobby-card"><span class="emoji">📚</span><span class="label">Leer</span></div>
+    <div class="hobby-card"><span class="emoji">🚶</span><span class="label">Caminar</span></div>
+  </div>
+</section>
+
+<footer>
+  <p>Hecho con dedicación por <span class="name-foot">Cristian Felipe Rojas Sierra</span> · <span id="year"></span></p>
+</footer>
+
+<script>
+  // typed effect
+  const text = "Cristian, desarrollador en formación, creativo y orientado a resultados.";
+  const el = document.getElementById('typedText');
+  let i = 0;
+  function type(){
+    if(i <= text.length){
+      el.textContent = text.slice(0,i);
+      i++;
+      setTimeout(type, 28);
+    }
+  }
+  setTimeout(type, 600);
+
+  // scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        if(e.target.querySelectorAll){
+          e.target.querySelectorAll('.bar-fill').forEach(b=>{
+            b.style.width = b.dataset.width + '%';
+          });
+        }
+      }
+    });
+  },{threshold:0.2});
+  reveals.forEach(r=>obs.observe(r));
+
+  // nav dots
+  const sections = document.querySelectorAll('section, header');
+  const dots = document.querySelectorAll('.nav-dot a');
+  const navObs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        dots.forEach(d=>d.classList.remove('active'));
+        const match = document.querySelector(`.nav-dot a[data-target="${e.target.id}"]`);
+        if(match) match.classList.add('active');
+      }
+    });
+  },{threshold:0.5});
+  sections.forEach(s=>navObs.observe(s));
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
